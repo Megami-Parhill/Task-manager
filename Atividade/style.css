@@ -1,0 +1,112 @@
+:root{
+  --gold: #b8860b;
+  --gold-2: #e0b14a;
+  --muted:#8b8b8b;
+  --bg:#fbfaf8;
+  --card:#ffffff;
+  --danger:#d9534f;
+  --glass: rgba(255,255,255,0.9);
+  --phone-width:380px;
+  --accent: #8f6b1a;
+}
+
+html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:var(--bg);color:#222}
+body{
+  background-image:
+    linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0,0,0,0.02) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0,0,0,0.02) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0,0,0,0.02) 75%);
+  background-size: 40px 40px;
+  background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+
+.phone {
+  width:var(--phone-width);
+  max-width:92vw;
+  height:812px;
+  border-radius:28px;
+  box-shadow: 0 12px 40px rgba(30,40,50,0.12);
+  background: linear-gradient(180deg,#fffdf9, #f8f5ef);
+  padding:18px;
+  box-sizing:border-box;
+  position:relative;
+  overflow:hidden;
+}
+
+.screen {
+  height:100%;
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-sizing:border-box;
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+header.app-header{
+  display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:2px solid rgba(0,0,0,0.05);
+  margin-bottom:12px;
+}
+header.app-header h1{font-weight:700;color:var(--gold);margin:0;font-size:20px}
+.menu-btn{font-size:22px;color:#666;opacity:0.9}
+
+/* forms */
+.card{background:var(--glass);border-radius:10px;padding:14px;margin:10px 0;box-shadow:0 1px 0 rgba(0,0,0,0.03)}
+label{display:block;font-weight:700;color:var(--accent);margin-bottom:6px;font-size:13px}
+input[type="text"], input[type="email"], input[type="password"], textarea, select {
+  width:100%;padding:10px;border-radius:6px;border:1px solid #e7e1d9;background:#fff;box-sizing:border-box;font-size:14px;
+}
+textarea{min-height:84px;resize:vertical}
+.btn{
+  display:inline-block;padding:10px 14px;border-radius:8px;border:none;background:var(--gold);color:#fff;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 14px rgba(184,134,11,0.12);
+}
+.btn.ghost{background:transparent;color:var(--gold);border:2px solid rgba(184,134,11,0.12)}
+.btn.danger{background:var(--danger);box-shadow:none}
+
+/* login layout */
+.login-box{display:flex;flex-direction:column;align-items:center;justify-content:center;height:80%}
+.avatar{
+  width:78px;height:78px;border-radius:50%;background:linear-gradient(180deg,#fff7eb,#fff8f0);display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+  box-shadow: inset 0 -6px 12px rgba(0,0,0,0.03);
+}
+.avatar svg{width:40px;height:40px;fill:var(--gold-2)}
+.form-row{width:100%;margin-bottom:10px}
+
+/* tabs for classes */
+.tabs{display:flex;gap:8px;margin-bottom:8px}
+.tab{padding:8px 10px;border-bottom:4px solid transparent;cursor:pointer;font-weight:700;color:#555}
+.tab.active{border-color:var(--gold);color:var(--gold)}
+
+/* task list */
+.task-list{list-style:none;padding:0;margin:0}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-bottom:1px dashed rgba(0,0,0,0.04)}
+.task-item .piece{width:34px;height:34px;border-radius:8px;background:linear-gradient(180deg,rgba(184,134,11,0.12),rgba(184,134,11,0.06));display:flex;align-items:center;justify-content:center;font-size:18px}
+.task-content{flex:1}
+.task-title{font-weight:700;margin:0;display:flex;align-items:center;gap:8px}
+.task-meta{color:var(--muted);font-size:13px;margin-top:6px}
+.task-actions{display:flex;flex-direction:column;gap:6px}
+
+.small {font-size:12px;padding:6px 8px;border-radius:6px;border:1px solid rgba(0,0,0,0.06);background:#fff}
+.plus-circle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--gold);font-weight:700;margin-top:8px}
+
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(10,10,20,0.35);display:flex;align-items:center;justify-content:center}
+.modal{width:90%;max-width:360px;background:#fff;padding:16px;border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,0.25)}
+
+/* details footer */
+.footer-btns{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+
+/* productivity canvas */
+.charts{display:flex;flex-direction:column;gap:16px;align-items:center;padding:10px}
+canvas{background:transparent;border-radius:8px}
+
+/* utilities */
+.muted{color:var(--muted)}
+.flex{display:flex}
+.gap-8{gap:8px}
+
+/* responsive tweaks */
+@media (max-width:420px){ .phone{height:88vh} }

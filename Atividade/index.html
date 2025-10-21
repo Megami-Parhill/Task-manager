@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ChessTasks — Gerenciador de Tarefas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="phone" id="app">
+    <div class="screen" id="screen">
+      <header class="app-header">
+        <h1 id="title">ChessTasks</h1>
+        <div class="menu-btn" id="menuBtn">☰</div>
+      </header>
+
+      <!-- Login view -->
+      <div id="view-login" class="view">
+        <div class="login-box card">
+          <div class="avatar">
+            <svg viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="8" r="3"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+          </div>
+          <div style="width:100%;max-width:320px">
+            <div class="form-row">
+              <label for="email">E-mail</label>
+              <input id="email" type="email" placeholder="user@exemplo"/>
+            </div>
+            <div class="form-row">
+              <label for="password">Senha</label>
+              <input id="password" type="password" placeholder="senha123"/>
+            </div>
+            <div style="display:flex;justify-content:center;margin-top:6px">
+              <button class="btn" id="loginBtn">Login</button>
+            </div>
+            <p class="muted" style="text-align:center;margin-top:8px;font-size:13px">Usuário de teste: <strong>user@exemplo</strong> / senha: <strong>senha123</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main app view -->
+      <div id="view-main" class="view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div>
+            <h2 style="margin:0;color:var(--gold)">Minhas tarefas</h2>
+            <div class="tabs" id="classTabs"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end">
+            <button class="btn" id="addTaskBtn">+ Nova</button>
+            <button class="btn ghost" id="logoutBtn" style="margin-top:6px">Sair</button>
+          </div>
+        </div>
+
+        <ul class="task-list card" id="taskList" aria-live="polite"></ul>
+
+        <div class="card">
+          <label>Comentário rápido</label>
+          <textarea id="quickComment" placeholder="Adicione um comentário rápido"></textarea>
+        </div>
+      </div>
+
+      <!-- Details view -->
+      <div id="view-details" class="view" style="display:none">
+        <h2 style="color:var(--gold)">Detalhes da tarefa</h2>
+        <div class="card">
+          <label>Escolha tarefa</label>
+          <select id="detailSelect"></select>
+
+          <div style="margin-top:10px">
+            <label>Status</label>
+            <div><label><input type="checkbox" id="detailComplete"> Concluída</label></div>
+            <div style="margin-top:8px">
+              <label>Classe</label>
+              <div id="detailClassRadios"></div>
+            </div>
+
+            <div style="margin-top:8px">
+              <label>Descrição</label>
+              <textarea id="detailDesc"></textarea>
+            </div>
+
+            <div class="footer-btns">
+              <button class="btn danger" id="deleteBtn">Delete</button>
+              <div style="flex:1"></div>
+              <button class="btn" id="saveDetailBtn">Salvar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Productivity view -->
+      <div id="view-prod" class="view" style="display:none">
+        <h2 style="color:var(--gold)">Produtividade</h2>
+        <div class="tabs" style="margin-bottom:8px">
+          <div class="tab active" data-view="weekly">Semanal</div>
+          <div class="tab" data-view="monthly">Mensal</div>
+          <div class="tab" data-view="yearly">Anual</div>
+        </div>
+        <div class="charts card">
+          <canvas id="pieChart" width="260" height="180"></canvas>
+          <canvas id="barChart" width="300" height="140"></canvas>
+        </div>
+      </div>
+
+      <nav style="position:sticky;bottom:12px;display:flex;justify-content:space-around;margin-top:12px">
+        <button class="small" data-nav="main">Tarefas</button>
+        <button class="small" data-nav="details">Detalhes</button>
+        <button class="small" data-nav="prod">Produtividade</button>
+      </nav>
+    </div>
+  </div>
+
+  <div id="modalWrap" style="display:none"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
