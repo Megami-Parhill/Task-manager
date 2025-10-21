@@ -72,7 +72,7 @@ Para limpar tudo:
 ```js
 localStorage.clear()
 ```
-🎨 Tema Branco e Dourado
+# 🎨 Tema Branco e Dourado
 
 O tema utiliza tons clássicos de xadrez:
 --gold: #b8860b;
