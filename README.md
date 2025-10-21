@@ -71,6 +71,7 @@ Isso significa que:
 Para limpar tudo:
 ```js
 localStorage.clear()
+```
 🎨 Tema Branco e Dourado
 
 O tema utiliza tons clássicos de xadrez:
