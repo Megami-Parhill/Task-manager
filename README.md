@@ -1,88 +1,71 @@
-# ♔ ChessTasks — Gerenciador de Tarefas com Tema de Xadrez
+# ♟ ChessTasks — Aplicativo Todo List
 
-Um aplicativo web responsivo (estilo mobile) criado com **HTML**, **CSS** e **JavaScript puro**, com tema branco e dourado inspirado no tabuleiro de **xadrez**.  
-Cada tipo de tarefa usa o ícone de uma peça diferente, refletindo sua prioridade no jogo (e na vida 😄).
+## 📌 Descrição do Projeto
 
-## ♕ Demonstração
+O **ChessTasks** é um aplicativo *Todo List* com tema de **xadrez**, desenvolvido para a disciplina de *Projeto de Interface Web* do curso de **Sistemas para Internet – IFTO Campus Palmas**, sob orientação do professor **Thiago Guimarães Tavares**.
 
-- Interface elegante e responsiva.
-- Tema **branco e dourado** com padrão sutil de tabuleiro.
-- Armazenamento **localStorage** — mantém suas tarefas mesmo após fechar o navegador.
-- Exibe **gráficos de produtividade** (tarefas concluídas e pendentes).
-- Telas:
-  - Login  
-  - Minhas Tarefas  
-  - Criar / Editar  
-  - Detalhes  
-  - Produtividade
-
-## ♗ Tecnologias Utilizadas
-
-- HTML5  
-- CSS3 (Flexbox e variáveis CSS)  
-- JavaScript (ES6)  
-- Canvas API (para os gráficos)  
-- localStorage (persistência de dados)
-
-## ♘ Ícones de Classes (peças)
-
-| Classe       | Ícone | Peça de xadrez | Significado                |
-|---------------|:------:|----------------|----------------------------|
-| Priority      | ♔ | Rei     | Tarefa mais importante       |
-| Secondary     | ♕ | Rainha  | Alta prioridade secundária   |
-| Minor         | ♗ | Bispo   | Tarefa intermediária         |
-| World         | ♘ | Cavalo  | Tarefa leve / global         |
+O objetivo é oferecer uma forma prática e elegante de gerenciar tarefas, com recursos de personalização e uma interface que remete ao estilo clássico do tabuleiro de xadrez.
 
 ---
 
-## ⚙️ Como Usar
+## 🎨 Wireframe
 
-1. Baixe os três arquivos e coloque na mesma pasta:
-   - `index.html`  
-   - `style.css`  
-   - `script.js`
-2. Abra o arquivo `index.html` em um navegador (duplo clique).
-3. Faça login com o usuário de teste:
-user@exemplo
-senha123
-4. Adicione, edite e marque tarefas como concluídas.
-5. Use a aba **Produtividade** para visualizar gráficos.
+**(Insira aqui a imagem do seu wireframe)**
+
+O desenvolvimento foi baseado em um wireframe planejado previamente, representando a disposição das telas: **Login**, **Tarefas**, **Detalhes**, e **Produtividade**.
 
 ---
 
-## 🧩 Estrutura do Projeto
+## ⚙️ Funcionalidades Principais
 
-chess_tasks/
-│
-├── index.html # Estrutura principal e telas do app
-├── style.css # Tema branco e dourado + layout responsivo
-├── script.js # Lógica, armazenamento e interações
-└── README.md # Este arquivo
+* ✅ **Adicionar novas tarefas** por meio do botão flutuante (+)
+* ♔ **Classificar tarefas** em diferentes categorias com ícones de peças de xadrez
+* ✏️ **Editar** ou **excluir** tarefas existentes
+* ✔️ **Marcar tarefas como concluídas**
+* 📊 **Visualizar gráficos de produtividade** (tarefas pendentes/concluídas)
+* 🌗 **Alternar entre tema claro e escuro**
+* 🎨 **Escolher cor de destaque** (dourado, azul, verde, roxo, vermelho ou laranja)
+* 💾 **Salvamento automático** das tarefas no *LocalStorage* do navegador
 
 ---
 
-## 💾 Armazenamento
+## 💻 Tecnologias Utilizadas
 
-Todas as tarefas são salvas automaticamente no `localStorage` do navegador.  
-Isso significa que:
-- Elas permanecem mesmo após fechar o navegador.  
-- São exclusivas para o navegador atual (não sincroniza entre dispositivos).
+O projeto foi desenvolvido utilizando:
 
-Para limpar tudo:
-```js
-localStorage.clear()
+* **HTML5** — estrutura do aplicativo
+* **CSS3** — estilização e suporte a temas (dark/light e paleta de cores)
+* **JavaScript (ES6+)** — manipulação da lógica, interface e armazenamento local
+
+---
+
+## 🚀 Como Executar o Projeto
+
+1. Faça o download dos arquivos:
+
+   * `index.html`
+   * `style.css`
+   * `script.js`
+2. Coloque todos na **mesma pasta**.
+3. Abra o arquivo `index.html` no navegador.
+4. Faça login com **qualquer e-mail e senha** (não há validação externa).
+5. Use o botão ☰ para acessar o menu lateral e alternar entre telas ou temas.
+
+---
+
+## 🧩 Estrutura de Pastas
+
 ```
-## 🎨 Tema Branco e Dourado
+ChessTasks/
+│
+├── index.html   # Estrutura principal e telas
+├── style.css    # Estilos, temas e layout responsivo
+└── script.js    # Lógica, armazenamento e interatividade
+```
 
-O tema utiliza tons clássicos de xadrez:
---gold: #b8860b;
---gold-2: #e0b14a;
---bg: #fbfaf8;
---card: #ffffff;
-Com um leve padrão de tabuleiro criado via linear-gradient().
-🏁 Licença
+---
 
-Este projeto é de uso livre para estudos, modificações e distribuição.
-Créditos são bem-vindos se for reutilizado publicamente ♛
+## 📱 Interface
 
-Desenvolvido com ♕ por [Nicole Marciano]
+O aplicativo é responsivo, adaptando-se a telas de dispositivos móveis.
+Os elementos seguem um estilo inspirado em peças e cores do xadrez, com foco em clareza visual e usabilidade.
