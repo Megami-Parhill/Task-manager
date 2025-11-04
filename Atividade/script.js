@@ -1,26 +1,62 @@
 // ChessTasks script (uses localStorage)
-// Simple mobile-like web app with white & gold chess theme
+// Mobile task manager app with chess theme
 (() => {
-  const defaultUser = {email:'user@exemplo', pass:'senha123'};
+  'use strict';
+  
+  // Constants
   const pieceMap = {
-    'Priority': '♔',   // King
-    'Secondary': '♕', // Queen
-    'Minor': '♗',     // Bishop
-    'World': '♘'      // Knight
+    'Prioridade': '♔',   // King
+    'Secundária': '♕', // Queen
+    'Menor': '♗',     // Bishop
+    'Mundo': '♘'      // Knight
   };
   const classList = Object.keys(pieceMap);
-  const KEY = { USER:'cht_user', TASKS:'cht_tasks' };
+  const KEY = { 
+    USER: 'cht_user', 
+    TASKS: 'cht_tasks', 
+    THEME: 'cht_theme', 
+    ACCENT: 'cht_accent' 
+  };
+  
+  // Helper functions
   const el = id => document.getElementById(id);
   const qsa = s => Array.from(document.querySelectorAll(s));
+  
+  // Auth functions
+  function isValidEmail(email) {
+    if (!email || typeof email !== 'string') return false;
+    // Valida formato básico de email (tem @ e domínio)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email.trim());
+  }
+  
+  function login(email, password) {
+    if (!email || !password) return false;
+    const emailTrimmed = email.trim().toLowerCase();
+    // Aceita qualquer email válido com qualquer senha
+    if (isValidEmail(emailTrimmed)) {
+      localStorage.setItem(KEY.USER, emailTrimmed);
+      return true;
+    }
+    return false;
+  }
+  
+  function isLoggedIn() {
+    return !!localStorage.getItem(KEY.USER);
+  }
+  
+  function logout() {
+    localStorage.removeItem(KEY.USER);
+  }
 
   function genId(){ return 't'+Math.random().toString(36).slice(2,9) }
 
   function seedTasks(){
     if(!localStorage.getItem(KEY.TASKS)){
       const sample = [
-        {id:genId(), title:'Task 1', cls:'Priority', desc:'Derrotar o monstro na Ilha Norte', done:false, deadline:null, created:Date.now()},
-        {id:genId(), title:'Task 2', cls:'Secondary', desc:'Coletar ervas', done:true, deadline:null, created:Date.now()},
-        {id:genId(), title:'Task 3', cls:'Minor', desc:'Visitar o ferreiro', done:false, deadline:null, created:Date.now()},
+        {id:genId(), title:'Tarefa 1', cls:'Prioridade', desc:'Derrotar o monstro na Ilha Norte', done:false, deadline:null, created:Date.now()},
+        {id:genId(), title:'Tarefa 2', cls:'Secundária', desc:'Coletar ervas', done:true, deadline:null, created:Date.now()},
+        {id:genId(), title:'Tarefa 3', cls:'Menor', desc:'Visitar o ferreiro', done:false, deadline:null, created:Date.now()},
       ];
       localStorage.setItem(KEY.TASKS, JSON.stringify(sample));
     }
@@ -43,43 +79,173 @@
     if(name==='main') renderTaskList();
     if(name==='details') populateDetails();
     if(name==='prod') drawCharts();
+    toggleFab(name);
+    if(name !== 'login') {
+      updateActiveNav(name);
+      closeSidebar();
+    }
   }
 
-  // initial
-  seedTasks();
-  if(localStorage.getItem(KEY.USER)) showView('main');
-  else showView('login');
+  // Theme management
+  function initTheme(){
+    const savedTheme = localStorage.getItem(KEY.THEME) || 'light';
+    const savedAccent = localStorage.getItem(KEY.ACCENT) || 'gold';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute('data-accent', savedAccent);
+    // Set checkbox after DOM is ready
+    setTimeout(() => {
+      if(el('darkModeToggle')) el('darkModeToggle').checked = savedTheme === 'dark';
+      updateColorPalette(savedAccent);
+    }, 100);
+  }
+  
+  function updateColorPalette(color){
+    qsa('.color-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.color === color);
+    });
+  }
+  
+  // Sidebar management
+  function openSidebar(){
+    el('sidebar').classList.add('active');
+    el('sidebarOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeSidebar(){
+    el('sidebar').classList.remove('active');
+    el('sidebarOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  
+  function updateActiveNav(view){
+    qsa('.sidebar-nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.nav === view);
+    });
+  }
 
-  // Login
-  el('loginBtn').addEventListener('click', ()=>{
-    const em = el('email').value.trim();
-    const pw = el('password').value;
-    if(em === defaultUser.email && pw === defaultUser.pass){
-      localStorage.setItem(KEY.USER, em);
-      showView('main');
-    } else {
-      alert('Credenciais incorretas. Usuário de teste: user@exemplo / senha123');
+  // Initialize login handlers
+  function initLogin() {
+    const loginBtn = el('loginBtn');
+    const emailInput = el('email');
+    const passwordInput = el('password');
+    
+    if (!loginBtn || !emailInput || !passwordInput) {
+      console.error('Login elements not found');
+      return;
     }
-  });
-  el('logoutBtn').addEventListener('click', ()=> {
-    localStorage.removeItem(KEY.USER);
-    showView('login');
-  });
+    
+    const handleLogin = () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      
+      if (!email || !password) {
+        alert('♟ Por favor, preencha email e senha');
+        return;
+      }
+      
+      if (login(email, password)) {
+        showView('main');
+        emailInput.value = '';
+        passwordInput.value = '';
+      } else {
+        alert('♟ Email inválido.\n\nPor favor, insira um email válido com qualquer senha.');
+      }
+    };
+    
+    loginBtn.addEventListener('click', handleLogin);
+    
+    // Allow login with Enter key
+    [emailInput, passwordInput].forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleLogin();
+        }
+      });
+    });
+  }
+  // Initialize sidebar
+  function initSidebar() {
+    const menuBtn = el('menuBtn');
+    const sidebarClose = el('sidebarClose');
+    const sidebarOverlay = el('sidebarOverlay');
+    
+    if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+    if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+    
+    // Sidebar navigation
+    qsa('.sidebar-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const nav = item.dataset.nav;
+        if (nav === 'main') showView('main');
+        if (nav === 'details') showView('details');
+        if (nav === 'prod') showView('prod');
+      });
+    });
+  }
+  
+  // Initialize theme controls
+  function initThemeControls() {
+    const darkModeToggle = el('darkModeToggle');
+    
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('change', (e) => {
+        const theme = e.target.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem(KEY.THEME, theme);
+      });
+    }
+    
+    qsa('.color-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const color = btn.dataset.color;
+        document.documentElement.setAttribute('data-accent', color);
+        localStorage.setItem(KEY.ACCENT, color);
+        updateColorPalette(color);
+      });
+    });
+  }
+  
+  // Initialize logout handlers
+  function initLogout() {
+    const logoutBtn = el('logoutBtn');
+    const sidebarLogoutBtn = el('sidebarLogoutBtn');
+    
+    const handleLogout = () => {
+      logout();
+      showView('login');
+      closeSidebar();
+    };
+    
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    if (sidebarLogoutBtn) {
+      sidebarLogoutBtn.addEventListener('click', handleLogout);
+    }
+  }
 
   // Tabs
-  const tabsWrap = document.getElementById('classTabs');
-  let activeClass = 'Priority';
+  const tabsWrap = el('classTabs');
+  let activeClass = 'Prioridade';
   function renderTabs(){
+    if (!tabsWrap) return;
     tabsWrap.innerHTML = '';
     classList.forEach(c=>{
       const d = document.createElement('div');
       d.className = 'tab ' + (c===activeClass ? 'active':'');
-      d.textContent = c;
-      d.addEventListener('click', ()=> { activeClass=c; renderTabs(); renderTaskList(); });
+      d.innerHTML = `<span style="margin-right:4px">${pieceMap[c] || ''}</span>${c}`;
+      d.addEventListener('click', ()=> { 
+        activeClass=c; 
+        renderTabs(); 
+        renderTaskList(); 
+      });
       tabsWrap.appendChild(d);
     });
   }
-  renderTabs();
 
   // Task list
   const taskListEl = el('taskList');
@@ -88,7 +254,10 @@
     taskListEl.innerHTML = '';
     const filtered = tasks.filter(t => t.cls === activeClass);
     if(filtered.length === 0){
-      taskListEl.innerHTML = '<div style="padding:18px;color:var(--muted)">Nenhuma tarefa nesta classe. Crie uma nova!</div>';
+      taskListEl.innerHTML = `<div style="padding:18px;color:var(--muted);text-align:center">
+        <div style="font-size:32px;margin-bottom:8px">♟</div>
+        <div>Nenhuma tarefa nesta classe. Crie uma nova!</div>
+      </div>`;
       return;
     }
     filtered.forEach(t => {
@@ -101,7 +270,7 @@
           <div class="task-meta">${t.desc ? escapeHtml(t.desc) : '<span class="muted">sem descrição</span>'}</div>
         </div>
         <div class="task-actions">
-          <label><input type="checkbox" data-id="${t.id}" ${t.done ? 'checked':''}> OK</label>
+          <label><input type="checkbox" data-id="${t.id}" ${t.done ? 'checked':''}> Concluída</label>
           <button class="small" data-edit="${t.id}">Editar</button>
         </div>
       `;
@@ -117,7 +286,6 @@
 
   // Modals
   const modalWrap = el('modalWrap');
-  el('addTaskBtn').addEventListener('click', openCreateModal);
 
   function openCreateModal(){
     openModal({
@@ -126,7 +294,7 @@
       onOpen: ()=> {
         populateModalClasses();
         el('modalSave').onclick = () => {
-          const t = { id: genId(), title: el('mTitle').value.trim() || 'Untitled', cls: el('mClass').value, desc: el('mDesc').value, done:false, deadline: el('mDeadline').value || null, created:Date.now() };
+          const t = { id: genId(), title: el('mTitle').value.trim() || 'Sem título', cls: el('mClass').value, desc: el('mDesc').value, done:false, deadline: el('mDeadline').value || null, created:Date.now() };
           const tasks = loadTasks(); tasks.push(t); saveTasks(tasks);
           closeModal(); renderTaskList(); drawCharts();
         };
@@ -164,17 +332,17 @@
   function modalFormHtml(){
     return `
       <div style="display:flex;flex-direction:column;gap:8px">
-        <label>Class</label>
-        <select id="mClass">${classList.map(c=>`<option value="${c}">${c}</option>`).join('')}</select>
-        <label>Title</label>
-        <input id="mTitle" type="text" placeholder="Add title"/>
-        <label>Description</label>
-        <textarea id="mDesc" placeholder="Add description"></textarea>
-        <label>Deadline</label>
-        <input id="mDeadline" type="text" placeholder="Add deadline"/>
+        <label>♟ Classe</label>
+        <select id="mClass">${classList.map(c=>`<option value="${c}">${pieceMap[c] || ''} ${c}</option>`).join('')}</select>
+        <label>♔ Título</label>
+        <input id="mTitle" type="text" placeholder="Adicione o título da tarefa"/>
+        <label>♕ Descrição</label>
+        <textarea id="mDesc" placeholder="Adicione uma descrição"></textarea>
+        <label>♗ Prazo</label>
+        <input id="mDeadline" type="text" placeholder="Ex: Hoje, Amanhã, 15/12/2024"/>
         <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px">
-          <button class="btn ghost" id="modalCancel">Cancel</button>
-          <button class="btn" id="modalSave">Save</button>
+          <button class="btn ghost" id="modalCancel">Cancelar</button>
+          <button class="btn" id="modalSave">Salvar</button>
         </div>
       </div>
     `;
@@ -190,7 +358,7 @@
     modalWrap.innerHTML = `
       <div class="overlay">
         <div class="modal" role="dialog" aria-modal="true">
-          <h3 style="margin-top:0;color:var(--gold)">${title}</h3>
+          <h3 style="margin-top:0;color:var(--gold)">♟ ${title}</h3>
           <div>${content}</div>
         </div>
       </div>
@@ -205,16 +373,18 @@
     const select = el('detailSelect'); select.innerHTML='';
     const tasks = loadTasks();
     tasks.forEach(t => {
-      const opt = document.createElement('option'); opt.value = t.id; opt.textContent = t.title;
+      const opt = document.createElement('option'); 
+      opt.value = t.id; 
+      opt.textContent = `${pieceMap[t.cls] || '♟'} ${t.title}`;
       select.appendChild(opt);
     });
     const radios = el('detailClassRadios');
-    radios.innerHTML = classList.map(c => `<div><label><input type="radio" name="detailClass" value="${c}"> ${pieceMap[c]||''} ${c}</label></div>`).join('');
+    radios.innerHTML = classList.map(c => `<div><label><input type="radio" name="detailClass" value="${c}"> <span style="font-size:18px;margin-right:6px">${pieceMap[c]||''}</span> ${c}</label></div>`).join('');
     if(tasks.length) fillDetailForm(tasks[0].id);
     select.onchange = e => fillDetailForm(e.target.value);
     el('saveDetailBtn').onclick = saveDetail;
     el('deleteBtn').onclick = () => {
-      if(confirm('Excluir tarefa?')) {
+      if(confirm('♟ Excluir tarefa?')) {
         const id = el('detailSelect').value;
         let tasks = loadTasks(); tasks = tasks.filter(t=>t.id!==id); saveTasks(tasks);
         populateDetails(); renderTaskList(); drawCharts();
@@ -240,7 +410,7 @@
     if(cls) t.cls = cls.value;
     saveTasks(tasks);
     populateDetails(); renderTaskList(); drawCharts();
-    alert('Detalhes salvos');
+    alert('♟ Detalhes salvos!');
   }
 
   // Charts
@@ -285,28 +455,68 @@
     });
   }
 
-  // helpers
-  function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+  // Helper functions
+  function escapeHtml(s){ 
+    return (s||'').toString().replace(/[&<>"']/g, m=> ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#39;'
+    }[m])); 
+  }
 
-  // init draw
-  renderTaskList();
-  drawCharts();
-
-  // nav buttons
-  qsa('[data-nav]').forEach(b => b.addEventListener('click', e=> {
-    const nav = b.dataset.nav;
-    if(nav === 'main') showView('main');
-    if(nav === 'details') showView('details');
-    if(nav === 'prod') showView('prod');
-  }));
-
-  // menu quick nav
-  el('menuBtn').addEventListener('click', ()=> {
-    const opt = prompt('Ir para: (1) Tarefas, (2) Detalhes, (3) Produtividade', '1');
-    if(!opt) return;
-    if(opt.startsWith('1')) showView('main');
-    if(opt.startsWith('2')) showView('details');
-    if(opt.startsWith('3')) showView('prod');
-  });
+  // FAB (Floating Action Button) handlers
+  const fabMain = el('fabAddTask');
+  const fabGlobal = el('fabAddTaskGlobal');
+  
+  function setupFab(){
+    if(fabMain) fabMain.addEventListener('click', openCreateModal);
+    if(fabGlobal) fabGlobal.addEventListener('click', openCreateModal);
+  }
+  
+  function toggleFab(viewName){
+    if(viewName === 'main'){
+      if(fabMain) fabMain.style.display = 'flex';
+      if(fabGlobal) fabGlobal.style.display = 'none';
+    } else if(viewName !== 'login'){
+      if(fabMain) fabMain.style.display = 'none';
+      if(fabGlobal) fabGlobal.style.display = 'flex';
+    } else {
+      if(fabMain) fabMain.style.display = 'none';
+      if(fabGlobal) fabGlobal.style.display = 'none';
+    }
+  }
+  
+  // Main initialization
+  function init() {
+    // Initialize data
+    seedTasks();
+    initTheme();
+    
+    // Initialize UI components
+    initLogin();
+    initSidebar();
+    initThemeControls();
+    initLogout();
+    setupFab();
+    renderTabs();
+    
+    // Initialize views
+    if (isLoggedIn()) {
+      showView('main');
+      renderTaskList();
+      drawCharts();
+    } else {
+      showView('login');
+    }
+  }
+  
+  // Start app when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
 })();

@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" content="#b8860b" />
 <title>ChessTasks — Gerenciador de Tarefas</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -10,43 +13,88 @@
   <div class="phone" id="app">
     <div class="screen" id="screen">
       <header class="app-header">
-        <h1 id="title">ChessTasks</h1>
+        <h1 id="title">♟ ChessTasks</h1>
         <div class="menu-btn" id="menuBtn">☰</div>
       </header>
+
+      <!-- Sidebar Menu -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h2>♟ ChessTasks</h2>
+          <button class="sidebar-close" id="sidebarClose">×</button>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="sidebar-nav-item" data-nav="main">
+            <span class="nav-icon">♔</span>
+            <span>Tarefas</span>
+          </button>
+          <button class="sidebar-nav-item" data-nav="details">
+            <span class="nav-icon">♕</span>
+            <span>Detalhes</span>
+          </button>
+          <button class="sidebar-nav-item" data-nav="prod">
+            <span class="nav-icon">♗</span>
+            <span>Produtividade</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="theme-section">
+            <h3>⚙️ Configurações</h3>
+            <div class="theme-controls">
+              <label class="theme-toggle">
+                <input type="checkbox" id="darkModeToggle">
+                <span>🌙 Modo Escuro</span>
+              </label>
+              <div class="accent-colors">
+                <label>Cor de Destaque:</label>
+                <div class="color-palette">
+                  <button class="color-option" data-color="gold" style="background:#b8860b" title="Dourado"></button>
+                  <button class="color-option" data-color="blue" style="background:#4a90e2" title="Azul"></button>
+                  <button class="color-option" data-color="green" style="background:#2ecc71" title="Verde"></button>
+                  <button class="color-option" data-color="purple" style="background:#9b59b6" title="Roxo"></button>
+                  <button class="color-option" data-color="red" style="background:#e74c3c" title="Vermelho"></button>
+                  <button class="color-option" data-color="orange" style="background:#f39c12" title="Laranja"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn ghost" id="sidebarLogoutBtn">Sair</button>
+        </div>
+      </div>
 
       <!-- Login view -->
       <div id="view-login" class="view">
         <div class="login-box card">
           <div class="avatar">
-            <svg viewBox="0 0 24 24" aria-hidden><circle cx="12" cy="8" r="3"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+            <div style="font-size:48px;color:var(--gold)">♟</div>
           </div>
           <div style="width:100%;max-width:320px">
             <div class="form-row">
               <label for="email">E-mail</label>
-              <input id="email" type="email" placeholder="user@exemplo"/>
+              <input id="email" type="email" placeholder="seu@email.com"/>
             </div>
             <div class="form-row">
               <label for="password">Senha</label>
-              <input id="password" type="password" placeholder="senha123"/>
+              <input id="password" type="password" placeholder="sua senha"/>
             </div>
             <div style="display:flex;justify-content:center;margin-top:6px">
-              <button class="btn" id="loginBtn">Login</button>
+              <button class="btn" id="loginBtn">Entrar</button>
             </div>
-            <p class="muted" style="text-align:center;margin-top:8px;font-size:13px">Usuário de teste: <strong>user@exemplo</strong> / senha: <strong>senha123</strong></p>
+            <p class="muted" style="text-align:center;margin-top:8px;font-size:13px">
+              Use <strong>qualquer email válido</strong> com <strong>qualquer senha</strong><br>
+              para fazer login
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Main app view -->
       <div id="view-main" class="view" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="view-header">
           <div>
-            <h2 style="margin:0;color:var(--gold)">Minhas tarefas</h2>
+            <h2 style="margin:0;color:var(--gold)">♔ Minhas tarefas</h2>
             <div class="tabs" id="classTabs"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end">
-            <button class="btn" id="addTaskBtn">+ Nova</button>
-            <button class="btn ghost" id="logoutBtn" style="margin-top:6px">Sair</button>
           </div>
         </div>
 
@@ -56,11 +104,16 @@
           <label>Comentário rápido</label>
           <textarea id="quickComment" placeholder="Adicione um comentário rápido"></textarea>
         </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="fabAddTask" aria-label="Adicionar nova tarefa">
+          <span class="fab-icon">♟</span>
+        </button>
       </div>
 
       <!-- Details view -->
       <div id="view-details" class="view" style="display:none">
-        <h2 style="color:var(--gold)">Detalhes da tarefa</h2>
+        <h2 style="color:var(--gold)">♕ Detalhes da tarefa</h2>
         <div class="card">
           <label>Escolha tarefa</label>
           <select id="detailSelect"></select>
@@ -79,7 +132,7 @@
             </div>
 
             <div class="footer-btns">
-              <button class="btn danger" id="deleteBtn">Delete</button>
+              <button class="btn danger" id="deleteBtn">Excluir</button>
               <div style="flex:1"></div>
               <button class="btn" id="saveDetailBtn">Salvar</button>
             </div>
@@ -89,7 +142,7 @@
 
       <!-- Productivity view -->
       <div id="view-prod" class="view" style="display:none">
-        <h2 style="color:var(--gold)">Produtividade</h2>
+        <h2 style="color:var(--gold)">♗ Produtividade</h2>
         <div class="tabs" style="margin-bottom:8px">
           <div class="tab active" data-view="weekly">Semanal</div>
           <div class="tab" data-view="monthly">Mensal</div>
@@ -101,15 +154,15 @@
         </div>
       </div>
 
-      <nav style="position:sticky;bottom:12px;display:flex;justify-content:space-around;margin-top:12px">
-        <button class="small" data-nav="main">Tarefas</button>
-        <button class="small" data-nav="details">Detalhes</button>
-        <button class="small" data-nav="prod">Produtividade</button>
-      </nav>
     </div>
   </div>
 
   <div id="modalWrap" style="display:none"></div>
+
+  <!-- Floating Action Button (visible on all views except login) -->
+  <button class="fab" id="fabAddTaskGlobal" aria-label="Adicionar nova tarefa" style="display:none">
+    <span class="fab-icon">♟</span>
+  </button>
 
 <script src="script.js"></script>
 </body>
